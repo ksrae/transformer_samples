@@ -1,0 +1,10 @@
+<div class="translator">
+  <h1>영어-한국어 번역기</h1>
+  <textarea [formControl]="sourceTextForm" placeholder="번역할 영어 텍스트를 입력하세요"></textarea>
+  <button [disabled]="loading ? true : null" (click)="translate()">
+    <span id="spinner" *ngIf="loading && sourceText?.length">🔄</span>번역
+  </button>
+  <div class="result" *ngIf="translatedText">
+    <p>{{ translatedText }}</p>
+  </div>
+</div>

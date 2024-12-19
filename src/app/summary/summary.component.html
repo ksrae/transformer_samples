@@ -1,0 +1,7 @@
+<div class="container">
+  <textarea id="long-text-input" [formControl]="originTextForm" placeholder="Enter your copy here..."></textarea>
+  <button id="generate-button" [disabled]="loading ? true : null" (click)="generateSummary()">
+    <span id="spinner" *ngIf="loading && model?.length">🔄</span> Generate Summary
+  </button>
+  <div id="output-div" *ngIf="output?.length">{{ output }}</div>
+</div>
