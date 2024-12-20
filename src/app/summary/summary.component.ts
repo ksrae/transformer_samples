@@ -32,15 +32,10 @@ export class SummaryComponent implements OnInit {
     ).subscribe();
   }
 
-  // async setSummaryPipeline() {
-  //   await pipeline(
-  //     'summarization', // task
-  //     'Xenova/t5-small' // model
-  //   );
-  // }
-
   async generateSummary() {
     this.loading = true;
+    // Xenova/t5-small
+    // Xenova/bart-large-cnn
     const generator = await pipeline('summarization', 'Xenova/distilbart-cnn-6-6');
     const text = this.model;
     const output = await generator(text, {
