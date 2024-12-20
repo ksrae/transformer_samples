@@ -1,0 +1,12 @@
+<h3>Text2text generation</h3>
+<div class="container">
+  <textarea id="long-text-input" [formControl]="textForm" placeholder="Enter your text here..."></textarea>
+  <button id="generate-button" [disabled]="loading() ? true : null" (click)="generate()">
+    <span [ngClass]="{'loader': loading() && textForm.value?.length ? true : false}"></span> Response
+  </button>
+  <p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
+  <div id="output-div" *ngIf="output()?.length">
+    <p>{{ output() }}</p>
+  </div>
+</div>
+

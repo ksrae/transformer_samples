@@ -1,0 +1,22 @@
+<div class="translator">
+  <h1>Translator</h1>
+  <div class="select-container">
+    <select [formControl]="sourceLangForm">
+      <option value="en">영어</option>
+      <option value="ko">한국어</option>
+    </select>
+    <select [formControl]="targetLangForm">
+      <option value="ko">한국어</option>
+      <option value="en">영어</option>
+    </select>
+  </div>
+
+  <textarea [formControl]="sourceTextForm" placeholder="번역할 텍스트를 입력하세요"></textarea>
+  <button [disabled]="loading() ? true : null" (click)="translate()">
+    <span [ngClass]="{'loader': loading() && sourceTextForm.value ? true : false}"></span> 번역
+  </button>
+  <p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
+  <div class="result" *ngIf="translatedText()?.length">
+    <p>{{ translatedText() }}</p>
+  </div>
+</div>

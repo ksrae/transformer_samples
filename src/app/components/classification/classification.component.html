@@ -1,0 +1,19 @@
+<div class="container">
+  <div class="select-container">
+    <select [formControl]="sourceTypeForm">
+      <option value="positive">긍정 분석</option>
+      <option value="star">평점 분석</option>
+      <option value="feel">감정 분석</option>
+    </select>
+  </div>
+  <textarea id="long-text-input" [formControl]="originTextForm" placeholder="Enter your text here..."></textarea>
+  <button id="generate-button" [disabled]="loading() ? true : null" (click)="generate()">
+    <span [ngClass]="{'loader': loading() && originTextForm.value?.length ? true : false}"></span> Classification
+  </button>
+  <p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
+  <div id="output-div" *ngIf="output()?.length">
+    <p>{{ output() }}</p>
+    <p>Score: {{ score() | number: '1.0-2' }}</p>
+  </div>
+</div>
+
