@@ -1,21 +1,21 @@
 <div class="container">
-  <div class="select-container">
+  <h3>스피치 분석인데 잘 안됨</h3>
+  <!-- <div class="select-container">
     <select [formControl]="sourceTypeForm">
       <option value="gender">성별 분석</option>
       <option value="finetune">소리 분석 - huggingface error</option>
     </select>
-  </div>
+  </div> -->
   <!-- <textarea id="long-text-input" [formControl]="originTextForm" placeholder="나중에 url 받을 예정..."></textarea> -->
   <audio id="audio" controls>
     <source [src]="audioUrl()" type="audio/wav">
   </audio>
   <button id="generate-button" [disabled]="loading() ? true : null" (click)="generate()">
-    <span [ngClass]="{'loader': loading()}"></span> Classification
+    <span [ngClass]="{'loader': loading()}"></span> Recognition
   </button>
   <p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
   <div id="output-div" *ngIf="output()?.length">
     <p>{{ output() }}</p>
-    <p>Score: {{ score() | number: '1.0-2' }}</p>
   </div>
 </div>
 

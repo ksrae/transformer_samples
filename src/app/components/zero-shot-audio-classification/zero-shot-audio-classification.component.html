@@ -1,10 +1,4 @@
 <div class="container">
-  <div class="select-container">
-    <select [formControl]="sourceTypeForm">
-      <option value="gender">성별 분석</option>
-      <option value="finetune">소리 분석 - huggingface error</option>
-    </select>
-  </div>
   <!-- <textarea id="long-text-input" [formControl]="originTextForm" placeholder="나중에 url 받을 예정..."></textarea> -->
   <audio id="audio" controls>
     <source [src]="audioUrl()" type="audio/wav">

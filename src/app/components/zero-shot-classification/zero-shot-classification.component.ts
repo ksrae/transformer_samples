@@ -41,7 +41,10 @@ export class ZeroShotClassificationComponent extends CommonDirective implements 
       this.loading.set(false);
       this.stopTimer();
 
-      const { type, output, error } = event.data;
+      const buffer = event.data;
+      const result = this.arrayBufferToObject(buffer);
+      const { type, output, error } = result;
+
       if (type === 'SUCCESS') {
         this.successResult(output);
       } else if (type === 'ERROR') {
@@ -72,10 +75,14 @@ export class ZeroShotClassificationComponent extends CommonDirective implements 
     // return await pipeline('zero-shot-classification', 'Xenova/nli-deberta-v3-xsmall');
     // const labels = [ 'urgent', 'not urgent', 'phone', 'tablet', 'computer' ];
 
-    this.worker.postMessage({
+    const message = {
       text,
       labels,
-    });
+    };
+
+    // Convert object to ArrayBuffer for transfer
+    const buffer = this.objectToArrayBuffer(message);
+    this.worker.postMessage(buffer, [buffer]);
   }
 }
 

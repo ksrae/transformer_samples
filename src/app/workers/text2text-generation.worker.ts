@@ -3,16 +3,36 @@ import { pipeline } from '@huggingface/transformers';
 const ctx: Worker = self as any;
 
 ctx.onmessage = async (event) => {
-  const { text } = event.data;
+  const buffer = event.data;
+  const decoder = new TextDecoder();
+  const encoder = new TextEncoder();
+  const string = decoder.decode(new Uint8Array(buffer));
+
   let result;
   let output;
+  let response;
+  let responseString;
+  let responseBuffer;
+
+  const { text } = JSON.parse(string);
 
   try {
     result = await pipeline('text2text-generation', 'Xenova/LaMini-Flan-T5-783M');
     output = await result(text, {max_new_tokens: 100} as any);
 
-    ctx.postMessage({ type: 'SUCCESS', output });
+    // Convert response to ArrayBuffer for transfer
+    response = {
+      type: 'SUCCESS',
+      output
+    };
   } catch (error) {
-    ctx.postMessage({ type: 'ERROR', error: (error as any).message });
+    response = {
+      type: 'ERROR',
+      error: (error as any).message
+    };
   }
+
+  responseString = JSON.stringify(response);
+  responseBuffer = encoder.encode(responseString).buffer;
+  ctx.postMessage(responseBuffer, [responseBuffer]);
 };

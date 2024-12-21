@@ -3,21 +3,15 @@ import { pipeline } from '@huggingface/transformers';
 const ctx: Worker = self as any;
 
 ctx.onmessage = async (event) => {
+
   try {
-    const { audioData, modelType } = event.data;
+    const { audioData, label } = event.data;
 
     let result;
     let output;
 
-    if (modelType === 'gender') {
-      // Load the pipeline
-      result = await pipeline('audio-classification', 'Xenova/wav2vec2-large-xlsr-53-gender-recognition-librispeech');
-      // Process the audio data
-      output = await result(audioData);
-    } else if (modelType === 'star') {
-      result = await pipeline('audio-classification', 'Xenova/ast-finetuned-audioset-10-10-0.4593');
-      output = await result(audioData, { top_k: 5 });
-    }
+    result = await pipeline('zero-shot-audio-classification', 'Xenova/clap-htsat-unfused');
+    output = await result(audioData, label);
 
     const response = {
       type: 'SUCCESS',

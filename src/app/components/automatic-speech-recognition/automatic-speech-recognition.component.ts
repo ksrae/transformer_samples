@@ -1,19 +1,19 @@
-import { CommonDirective } from './../../directives/common.directive';
+import { CommonDirective } from '../../directives/common.directive';
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-audio-classification',
+  selector: 'app-automatic-speech-recognition',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule
   ],
-  templateUrl: './audio-classification.component.html',
-  styleUrl: './audio-classification.component.scss'
+  templateUrl: './automatic-speech-recognition.component.html',
+  styleUrl: './automatic-speech-recognition.component.scss'
 })
-export class AudioClassificationComponent extends CommonDirective implements AfterViewInit {
+export class AutomaticSpeechRecognitionComponent extends CommonDirective implements AfterViewInit {
   loading = signal(false);
   output = signal('');
   score = signal(0);
@@ -23,9 +23,10 @@ export class AudioClassificationComponent extends CommonDirective implements Aft
   private audioContext: AudioContext | null = null;
 
   ngAfterViewInit() {
+    // 기대한 결과가 안나오고 singing이라고만 나옴.
     this.audioUrl.set('https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/jfk.wav');
 
-    this.worker = new Worker(new URL('../../workers/audio-classification.worker', import.meta.url), {
+    this.worker = new Worker(new URL('../../workers/automatic-speech-recognition.worker', import.meta.url), {
       type: 'module'
     });
 
@@ -50,16 +51,15 @@ export class AudioClassificationComponent extends CommonDirective implements Aft
   }
 
   successResult(output: any[]) {
+    console.log({output});
+
     if (!Array.isArray(output) || output.length === 0) {
       console.error('Invalid output format:', output);
       return;
     }
 
     const highestItem = output[0];
-    if (highestItem?.label && typeof highestItem.score === 'number') {
-      this.output.set(highestItem.label);
-      this.score.set(highestItem.score * 100);
-    }
+    this.output.set(highestItem.text);
   }
 
   async generate() {
@@ -84,7 +84,6 @@ export class AudioClassificationComponent extends CommonDirective implements Aft
 
       const message = {
         audioData,
-        modelType: this.sourceTypeForm.value,
       };
 
       // Send transferable object

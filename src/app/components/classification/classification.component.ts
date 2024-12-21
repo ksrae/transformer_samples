@@ -25,21 +25,22 @@ export class ClassificationComponent extends CommonDirective implements AfterVie
       }),
     ).subscribe();
 
-    this.worker = new Worker(new URL('../../workers/classification.worker', import.meta.url), {
-      type: 'module'
-    });
-
+    this.worker = new Worker(new URL('../../workers/classification.worker', import.meta.url), { type: 'module' });
     this.workerMessage();
   }
 
   workerMessage() {
-    if(!this.worker) return;
+    if (!this.worker) return;
 
     this.worker.onmessage = (event) => {
       this.loading.set(false);
       this.stopTimer();
 
-      const { type, output, error } = event.data;
+      // Receive ArrayBuffer and convert back to object
+      const buffer = event.data;
+      const result = this.arrayBufferToObject(buffer);
+      const { type, output, error } = result;
+
       if (type === 'SUCCESS') {
         this.successResult(output);
       } else if (type === 'ERROR') {
@@ -49,10 +50,7 @@ export class ClassificationComponent extends CommonDirective implements AfterVie
   }
 
   successResult(output: any) {
-    const highestItem = output.length === 1
-      ? output[0]
-      : output.sort((a: any, b: any) => b.score - a.score)[0];
-
+    const highestItem = output.length === 1 ? output[0] : output.sort((a: any, b: any) => b.score - a.score)[0];
     this.output.set(highestItem.label);
     this.score.set(highestItem.score * 100);
   }
@@ -69,10 +67,15 @@ export class ClassificationComponent extends CommonDirective implements AfterVie
     this.startTimer();
 
     const text = this.originTextForm.value ?? '';
-
-    this.worker.postMessage({
+    const message = {
       text,
       modelType: this.sourceTypeForm.value
-    });
+    };
+
+    // Convert object to ArrayBuffer for transfer
+    const buffer = this.objectToArrayBuffer(message);
+    this.worker.postMessage(buffer, [buffer]);
   }
+
+
 }

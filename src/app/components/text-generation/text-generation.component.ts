@@ -41,7 +41,10 @@ export class TextgenerationComponent extends CommonDirective implements AfterVie
       this.loading.set(false);
       this.stopTimer();
 
-      const { type, output, error } = event.data;
+      const buffer = event.data;
+      const result = this.arrayBufferToObject(buffer);
+      const { type, output, error } = result;
+
       if (type === 'SUCCESS') {
         this.successResult(output);
       } else if (type === 'ERROR') {
@@ -66,9 +69,13 @@ export class TextgenerationComponent extends CommonDirective implements AfterVie
 
     const text = `${this.textForm.value}.`;
 
-    this.worker.postMessage({
+    const message = {
       text,
-    });
+    };
+
+    // Convert object to ArrayBuffer for transfer
+    const buffer = this.objectToArrayBuffer(message);
+    this.worker.postMessage(buffer, [buffer]);
   }
 
 }

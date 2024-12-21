@@ -1,31 +1,30 @@
-import { CommonDirective } from './../../directives/common.directive';
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, signal } from '@angular/core';
+import { Component, signal, AfterViewInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { tap } from 'rxjs';
+import { CommonDirective } from '../../directives/common.directive';
 
 @Component({
-  selector: 'app-audio-classification',
+  selector: 'app-zero-shot-audio-classification',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule
   ],
-  templateUrl: './audio-classification.component.html',
-  styleUrl: './audio-classification.component.scss'
+  templateUrl: './zero-shot-audio-classification.component.html',
+  styleUrls: ['./zero-shot-audio-classification.component.scss'],
 })
-export class AudioClassificationComponent extends CommonDirective implements AfterViewInit {
+export class ZeroShotAudioClassificationComponent extends CommonDirective implements AfterViewInit {
   loading = signal(false);
   output = signal('');
   score = signal(0);
-  sourceTypeForm = new FormControl('gender'); // gender, star
   audioUrl = signal('');
-
   private audioContext: AudioContext | null = null;
 
   ngAfterViewInit() {
-    this.audioUrl.set('https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/jfk.wav');
+    this.audioUrl.set('https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/dog_barking.wav');
 
-    this.worker = new Worker(new URL('../../workers/audio-classification.worker', import.meta.url), {
+    this.worker = new Worker(new URL('../../workers/zero-shot-audio-classification.worker', import.meta.url), {
       type: 'module'
     });
 
@@ -50,6 +49,7 @@ export class AudioClassificationComponent extends CommonDirective implements Aft
   }
 
   successResult(output: any[]) {
+    console.log({output})
     if (!Array.isArray(output) || output.length === 0) {
       console.error('Invalid output format:', output);
       return;
@@ -81,13 +81,14 @@ export class AudioClassificationComponent extends CommonDirective implements Aft
       const audioBuffer = await response.arrayBuffer();
 
       const audioData = await this.processAudioBuffer(audioBuffer);
+      const candidateLabels = ['dog', 'vaccum cleaner'];
 
       const message = {
         audioData,
-        modelType: this.sourceTypeForm.value,
+        label: candidateLabels
       };
 
-      // Send transferable object
+
       this.worker.postMessage(message, [audioData.buffer]);
     } catch (error) {
       console.error('Error in generate:', error);
@@ -105,3 +106,4 @@ export class AudioClassificationComponent extends CommonDirective implements Aft
     return audioBuffer.getChannelData(0); // Use the first audio channel
   }
 }
+

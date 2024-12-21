@@ -54,7 +54,10 @@ export class QAComponent extends CommonDirective implements AfterViewInit {
       this.loading.set(false);
       this.stopTimer();
 
-      const { type, output, error } = event.data;
+      const buffer = event.data;
+      const result = this.arrayBufferToObject(buffer);
+      const { type, output, error } = result;
+
       if (type === 'SUCCESS') {
         this.successResult(output);
       } else if (type === 'ERROR') {
@@ -62,6 +65,7 @@ export class QAComponent extends CommonDirective implements AfterViewInit {
       }
     };
   }
+
 
   successResult(output: any) {
     this.output = output.answer;
@@ -83,10 +87,14 @@ export class QAComponent extends CommonDirective implements AfterViewInit {
     const question = this.questionForm.value ?? '';
     const context = this.contextForm.value ?? '';
 
-    this.worker.postMessage({
+    const message = {
       question,
       context,
-    });
+    };
+
+    // Convert object to ArrayBuffer for transfer
+    const buffer = this.objectToArrayBuffer(message);
+    this.worker.postMessage(buffer, [buffer]);
   }
 
 }

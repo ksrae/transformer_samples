@@ -91,4 +91,17 @@ export class CommonDirective implements OnInit {
     }
     this.elapsedTimeWorker.postMessage({ command: 'stop' });
   }
+
+  // Helper trnasfer functions
+  objectToArrayBuffer(obj: any): ArrayBuffer {
+    const string = JSON.stringify(obj);
+    const encoder = new TextEncoder();
+    return encoder.encode(string).buffer;
+  }
+
+  arrayBufferToObject(buffer: ArrayBuffer): any {
+    const decoder = new TextDecoder();
+    const string = decoder.decode(new Uint8Array(buffer));
+    return JSON.parse(string);
+  }
 }
