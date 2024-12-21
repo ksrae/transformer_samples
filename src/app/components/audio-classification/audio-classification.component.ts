@@ -1,33 +1,35 @@
+import { CommonDirective } from './../../directives/common.directive';
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { tap } from 'rxjs';
-import { CommonDirective } from '../../directives/common.directive';
 
 @Component({
-  selector: 'app-text-generation',
+  selector: 'app-audio-classification',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule
   ],
-  templateUrl: './text-generation.component.html',
-  styleUrl: './text-generation.component.scss'
+  templateUrl: './audio-classification.component.html',
+  styleUrl: './audio-classification.component.scss'
 })
-export class TextgenerationComponent extends CommonDirective implements AfterViewInit {
-  loading = signal(true);
+export class AudioClassificationComponent extends CommonDirective implements AfterViewInit {
+  loading = signal(false);
   output = signal('');
-  textForm = new FormControl('');
+  score = signal(0);
+  originTextForm = new FormControl({value:'Do not input any text here during demo.', disabled: true});
+  sourceTypeForm = new FormControl('gender'); // gender, finetune
 
 
   ngAfterViewInit() {
-    this.textForm.valueChanges.pipe(
+    this.originTextForm.valueChanges.pipe(
       tap(value => {
         this.loading.set(value && value.length > 0 ? false : true);
       }),
     ).subscribe();
 
-    this.worker = new Worker(new URL('../../workers/text-generation.worker', import.meta.url), {
+    this.worker = new Worker(new URL('../../workers/audio-classification.worker', import.meta.url), {
       type: 'module'
     });
 
@@ -51,7 +53,10 @@ export class TextgenerationComponent extends CommonDirective implements AfterVie
   }
 
   successResult(output: any) {
-    this.output.set(output[0].generated_text);
+    const highestItem = output.length && output.length === 1 ? output[0] : output.sort((a: any, b: any) => b.score - a.score)[0];
+
+    this.output.set(highestItem.label);
+    this.score.set(highestItem.score * 100);
   }
 
   async generate() {
@@ -62,14 +67,15 @@ export class TextgenerationComponent extends CommonDirective implements AfterVie
 
     this.loading.set(true);
     this.output.set('');
+    this.score.set(0);
     this.startTimer(); // 시작 시간 기록
 
-    const text = `${this.textForm.value}.`;
+    const text = this.originTextForm.value ?? '';
 
     this.worker.postMessage({
       text,
+      modelType: this.sourceTypeForm.value
     });
+
   }
-
 }
-

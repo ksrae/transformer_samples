@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { env, pipeline } from '@huggingface/transformers';
+import { AfterViewInit, Component, signal } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { tap } from 'rxjs';
-import { ElapsedTimeDirective } from '../../directives/elapsed-time.directive';
+import { CommonDirective } from '../../directives/common.directive';
+
 
 @Component({
   selector: 'app-fill-mask',
@@ -15,46 +15,63 @@ import { ElapsedTimeDirective } from '../../directives/elapsed-time.directive';
   templateUrl: './fill-mask.component.html',
   styleUrl: './fill-mask.component.scss'
 })
-export class FillmaskComponent extends ElapsedTimeDirective implements OnInit {
+export class FillmaskComponent extends CommonDirective implements AfterViewInit {
   loading = signal(true);
   output = signal('');
   maskForm = new FormControl('');
 
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.maskForm.valueChanges.pipe(
       tap(value => {
         this.loading.set(value && value.length > 0 ? false : true);
       }),
     ).subscribe();
+
+    this.worker = new Worker(new URL('../../workers/fill-mask.worker', import.meta.url), {
+      type: 'module'
+    });
+
+    this.workerMessage();
+  }
+
+  workerMessage() {
+    if(!this.worker) return;
+
+    this.worker.onmessage = (event) => {
+      this.loading.set(false);
+      this.stopTimer();
+
+      const { type, output, error } = event.data;
+      if (type === 'SUCCESS') {
+        this.successResult(output);
+      } else if (type === 'ERROR') {
+        console.error('Worker error:', error);
+      }
+    };
+  }
+
+  successResult(output: any) {
+    const highestItem = output.length && output.length === 1 ? output[0] : output.sort((a: any, b: any) => b.score - a.score)[0];
+    this.output.set(highestItem.sequence);
   }
 
   async generate() {
+    if (!this.worker) {
+      console.error('Worker not initialized');
+      return;
+    }
+
     this.loading.set(true);
     this.output.set('');
     this.startTimer(); // 시작 시간 기록
 
-    let output: any;
+    const text = `${this.maskForm.value} [MASK].`;
 
-    const model = `${this.maskForm.value} [MASK].`;
+    this.worker.postMessage({
+      text,
+    });
 
-    const unmask = await this.bertbasecased();
-    output = await unmask(model);
-
-    console.log({output});
-
-    this.loading.set(false);
-
-
-    const highestItem = output.length && output.length === 1 ? output[0] : output.sort((a: any, b: any) => b.score - a.score)[0];
-    this.output.set(highestItem.sequence);
-
-    this.stopTimer(); // 시작 시간 기록
-  }
-
-  // positive or negative
-  async bertbasecased() {
-    return await pipeline('fill-mask', 'Xenova/bert-base-cased');
   }
 }
 

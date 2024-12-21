@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { AfterViewInit, Component, signal } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { env, pipeline } from '@huggingface/transformers';
 import { tap } from 'rxjs';
-import { ElapsedTimeDirective } from '../../directives/elapsed-time.directive';
+import { CommonDirective } from '../../directives/common.directive';
 
 @Component({
   selector: 'app-summary',
@@ -15,13 +14,13 @@ import { ElapsedTimeDirective } from '../../directives/elapsed-time.directive';
   templateUrl: './summary.component.html',
   styleUrl: './summary.component.scss'
 })
-export class SummaryComponent extends ElapsedTimeDirective implements OnInit {
+export class SummaryComponent extends CommonDirective implements AfterViewInit {
   loading = signal(true);
   output = signal('');
   originTextForm = new FormControl('');
 
 
-  ngOnInit() {
+  ngAfterViewInit() {
     // this.setSummaryPipeline();
 
     this.originTextForm.valueChanges.pipe(
@@ -29,27 +28,49 @@ export class SummaryComponent extends ElapsedTimeDirective implements OnInit {
         this.loading.set(value && value.length > 0 ? false : true);
       }),
     ).subscribe();
+
+    this.worker = new Worker(new URL('../../workers/summary.worker', import.meta.url), {
+      type: 'module'
+    });
+
+    this.workerMessage();
+  }
+
+  workerMessage() {
+    if(!this.worker) return;
+
+    this.worker.onmessage = (event) => {
+      this.loading.set(false);
+      this.stopTimer();
+
+      const { type, output, error } = event.data;
+      if (type === 'SUCCESS') {
+        this.successResult(output);
+      } else if (type === 'ERROR') {
+        console.error('Worker error:', error);
+      }
+    };
+  }
+
+  successResult(output: any) {
+    this.output.set((output[0] as any).summary_text);
   }
 
   async generateSummary() {
+    if (!this.worker) {
+      console.error('Worker not initialized');
+      return;
+    }
+
     this.loading.set(true);
     this.output.set('');
     this.startTimer(); // 시작 시간 기록
 
-    // Xenova/t5-small
-    // Xenova/bart-large-cnn
-    const generator = await pipeline('summarization', 'Xenova/distilbart-cnn-6-6');
-    const model = `${this.originTextForm.value}`;
-    const output = await generator(model, {
-      max_new_tokens: 100,
-    } as any);
+    const text = `${this.originTextForm.value}`;
 
-    console.log({output});
-
-    this.loading.set(false);
-    this.output.set((output[0] as any).summary_text);
-
-    this.stopTimer();
+    this.worker.postMessage({
+      text,
+    });
   }
 
 }

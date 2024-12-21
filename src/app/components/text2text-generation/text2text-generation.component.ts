@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { env, pipeline } from '@huggingface/transformers';
+import { AfterViewInit, Component, signal } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { tap } from 'rxjs';
-import { ElapsedTimeDirective } from '../../directives/elapsed-time.directive';
+import { CommonDirective } from '../../directives/common.directive';
 
 @Component({
   selector: 'app-text2text-generation',
@@ -15,43 +14,64 @@ import { ElapsedTimeDirective } from '../../directives/elapsed-time.directive';
   templateUrl: './text2text-generation.component.html',
   styleUrl: './text2text-generation.component.scss'
 })
-export class Text2textgenerationComponent extends ElapsedTimeDirective implements OnInit {
+export class Text2textgenerationComponent extends CommonDirective implements AfterViewInit {
   loading = signal(true);
   output = signal('');
   textForm = new FormControl('');
 
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.textForm.valueChanges.pipe(
       tap(value => {
         this.loading.set(value && value.length > 0 ? false : true);
       }),
     ).subscribe();
+
+    this.worker = new Worker(new URL('../../workers/text2text-generation.worker', import.meta.url), {
+      type: 'module'
+    });
+
+    this.workerMessage();
+  }
+
+
+  workerMessage() {
+    if(!this.worker) return;
+
+    this.worker.onmessage = (event) => {
+      this.loading.set(false);
+      this.stopTimer();
+
+      const { type, output, error } = event.data;
+      if (type === 'SUCCESS') {
+        this.successResult(output);
+      } else if (type === 'ERROR') {
+        console.error('Worker error:', error);
+      }
+    };
+  }
+
+  successResult(output: any) {
+    this.output.set(output[0].generated_text);
   }
 
   async generate() {
+    if (!this.worker) {
+      console.error('Worker not initialized');
+      return;
+    }
+
     this.loading.set(true);
     this.output.set('');
     this.startTimer(); // 시작 시간 기록
 
-    let output: any;
+    const text = `${this.textForm.value}`;
 
-    const model = `${this.textForm.value}`;
+    this.worker.postMessage({
+      text,
+    });
 
-    const result = await this.LaMiniFlanT5783M();
-    output = await result(model, {max_new_tokens: 100} as any);
-
-    console.log({output});
-
-    this.loading.set(false);
-    this.output.set(output[0].generated_text);
-
-    this.stopTimer();
   }
 
-  // token 100개도 오래걸리는데 200개만 되어도 엄청 오래 걸림
-  async LaMiniFlanT5783M() {
-    return await pipeline('text2text-generation', 'Xenova/LaMini-Flan-T5-783M');
-  }
 }
 

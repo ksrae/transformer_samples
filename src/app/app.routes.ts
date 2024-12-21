@@ -6,6 +6,7 @@ import { QAComponent } from './components/qa/qa.component';
 import { FillmaskComponent } from './components/fill-mask/fill-mask.component';
 import { Text2textgenerationComponent } from './components/text2text-generation/text2text-generation.component';
 import { TextgenerationComponent } from './components/text-generation/text-generation.component';
+import { AudioClassificationComponent } from './components/audio-classification/audio-classification.component';
 
 export const routes: Routes = [
 	{ path: '', children: [
@@ -13,6 +14,7 @@ export const routes: Routes = [
     {path: 'summary', component: SummaryComponent},
     {path: 'translator', component: TranslatorComponent},
     {path: 'classification', component: ClassificationComponent},
+    {path: 'audio-classification', component: AudioClassificationComponent},
     {path: 'qa', component: QAComponent},
     {path: 'fillmask', component: FillmaskComponent},
     {path: 'text2text-generation', component: Text2textgenerationComponent},

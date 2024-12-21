@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { env, pipeline } from '@huggingface/transformers';
+import { AfterViewInit, Component, signal } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { tap } from 'rxjs';
-import { ElapsedTimeDirective } from '../../directives/elapsed-time.directive';
+import { CommonDirective } from '../../directives/common.directive';
 
 @Component({
   selector: 'app-qa',
@@ -15,10 +14,10 @@ import { ElapsedTimeDirective } from '../../directives/elapsed-time.directive';
   templateUrl: './qa.component.html',
   styleUrl: './qa.component.scss'
 })
-export class QAComponent extends ElapsedTimeDirective implements OnInit {
-  loading = true;
-  output = "";
-  score = 0;
+export class QAComponent extends CommonDirective implements AfterViewInit {
+  loading = signal(false);
+  output = signal('');
+
   questionForm = new FormControl('Who is Sungrae?');
   contextForm = new FormControl(`
     Sungrae is a frontend developer; specially using Angular framework.
@@ -26,45 +25,69 @@ export class QAComponent extends ElapsedTimeDirective implements OnInit {
     He studied Computer Science at Weber State University in US.`);
 
 
-  ngOnInit() {
-    this.loading = this.questionForm.value?.length && this.contextForm.value?.length ? false : true;
+  ngAfterViewInit() {
+    this.loading.set(this.questionForm.value?.length && this.contextForm.value?.length ? false : true);
 
     this.questionForm.valueChanges.pipe(
       tap(value => {
-        this.loading = value && value.length > 0 ? false : true;
+        this.loading.set(value && value.length > 0 ? false : true);
       }),
     ).subscribe();
 
     this.contextForm.valueChanges.pipe(
       tap(value => {
-        this.loading = value && value.length > 0 ? false : true;
+        this.loading.set(value && value.length > 0 ? false : true);
       }),
     ).subscribe();
+
+    this.worker = new Worker(new URL('../../workers/qa.worker', import.meta.url), {
+      type: 'module'
+    });
+
+    this.workerMessage();
+  }
+
+  workerMessage() {
+    if(!this.worker) return;
+
+    this.worker.onmessage = (event) => {
+      this.loading.set(false);
+      this.stopTimer();
+
+      const { type, output, error } = event.data;
+      if (type === 'SUCCESS') {
+        this.successResult(output);
+      } else if (type === 'ERROR') {
+        console.error('Worker error:', error);
+      }
+    };
+  }
+
+  successResult(output: any) {
+    this.output = output.answer;
+    // this.score = output.score * 100;
   }
 
   async generate() {
-    this.loading = true;
-    this.output = '';
+    if (!this.worker) {
+      console.error('Worker not initialized');
+      return;
+    }
+
+
+    this.loading.set(true);
+    this.output.set('');
     this.startTimer(); // 시작 시간 기록
-    let output: any;
+
 
     const question = this.questionForm.value ?? '';
     const context = this.contextForm.value ?? '';
 
-    let answer = await this.distilbertbaseuncaseddistilledsquad();
-    output = await answer(question, context);
-
-    console.log({output});
-
-    this.loading = false;
-
-    this.output = output.answer;
-    // this.score = output.score * 100;
-    this.stopTimer();
+    this.worker.postMessage({
+      question,
+      context,
+    });
   }
 
-  async distilbertbaseuncaseddistilledsquad() {
-    return await pipeline('question-answering', 'Xenova/distilbert-base-uncased-distilled-squad');
-  }
 }
 
