@@ -15,7 +15,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 })
 export class AutomaticSpeechRecognitionComponent extends CommonDirective implements AfterViewInit {
   loading = signal(false);
-  output = signal('');
+  output = signal([] as any[]);
   score = signal(0);
   sourceTypeForm = new FormControl('gender'); // gender, star
   audioUrl = signal('');
@@ -51,15 +51,9 @@ export class AutomaticSpeechRecognitionComponent extends CommonDirective impleme
   }
 
   successResult(output: any[]) {
-    console.log({output});
+    console.log('output:', output);
 
-    if (!Array.isArray(output) || output.length === 0) {
-      console.error('Invalid output format:', output);
-      return;
-    }
-
-    const highestItem = output[0];
-    this.output.set(highestItem.text);
+    this.output.set(output);
   }
 
   async generate() {
@@ -69,7 +63,7 @@ export class AutomaticSpeechRecognitionComponent extends CommonDirective impleme
     }
 
     this.loading.set(true);
-    this.output.set('');
+    this.output.set([]);
     this.score.set(0);
     this.startTimer();
 

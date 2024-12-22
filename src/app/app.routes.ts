@@ -15,6 +15,9 @@ export const routes: Routes = [
     {path: 'text-generation', loadComponent: () => import('./components/text-generation/text-generation.component').then((x) => x.TextgenerationComponent)},
     {path: 'image-to-text', loadComponent: () => import('./components/image-to-text/image-to-text.component').then((x) => x.ImageToTextComponent)},
     {path: 'image-classification', loadComponent: () => import('./components/image-classification/image-classification.component').then((x) => x.ImageClassificationComponent)},
+    {path: 'image-segmentation', loadComponent: () => import('./components/image-segmentation/image-segmentation.component').then((x) => x.ImageSegmentationComponent)},
+    {path: 'zero-shot-image-classification', loadComponent: () => import('./components/zero-shot-image-classification/zero-shot-image-classification.component').then((x) => x.ZeroShotImageClassificationComponent)},
+    {path: 'object-detection', loadComponent: () => import('./components/object-detection/object-detection.component').then((x) => x.ObjectDetectionComponent)},
 
   ]},
   { path: '**', redirectTo: 'summary' }

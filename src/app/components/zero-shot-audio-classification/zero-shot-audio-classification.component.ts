@@ -16,7 +16,7 @@ import { CommonDirective } from '../../directives/common.directive';
 })
 export class ZeroShotAudioClassificationComponent extends CommonDirective implements AfterViewInit {
   loading = signal(false);
-  output = signal('');
+  output = signal([] as any[]);
   score = signal(0);
   audioUrl = signal('');
   private audioContext: AudioContext | null = null;
@@ -49,17 +49,9 @@ export class ZeroShotAudioClassificationComponent extends CommonDirective implem
   }
 
   successResult(output: any[]) {
-    console.log({output})
-    if (!Array.isArray(output) || output.length === 0) {
-      console.error('Invalid output format:', output);
-      return;
-    }
+    console.log('output:', output);
 
-    const highestItem = output[0];
-    if (highestItem?.label && typeof highestItem.score === 'number') {
-      this.output.set(highestItem.label);
-      this.score.set(highestItem.score * 100);
-    }
+    this.output.set(output);
   }
 
   async generate() {
@@ -69,7 +61,7 @@ export class ZeroShotAudioClassificationComponent extends CommonDirective implem
     }
 
     this.loading.set(true);
-    this.output.set('');
+    this.output.set([]);
     this.score.set(0);
     this.startTimer();
 

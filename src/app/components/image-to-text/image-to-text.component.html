@@ -7,7 +7,9 @@
     </select>
   </div>
 
-  <img [src]="imageUrl()" />
+  <div class="image-wrapper">
+    <img [src]="imageUrl()" alt="Classified Image" />
+  </div>
   <button [disabled]="loading() ? true : null" (click)="translate()">
     <span [ngClass]="{'loader': loading() && imageUrl()}"></span> 분석
   </button>

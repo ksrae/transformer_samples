@@ -15,7 +15,14 @@
   </button>
   <p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
   <div id="output-div" *ngIf="output()?.length">
-    <p>{{ output() }}</p>
+    <table>
+      <tr>
+        <th>Text</th>
+      </tr>
+      <tr *ngFor="let item of output()">
+        <td>{{ item.text }}</td>
+      </tr>
+    </table>
   </div>
 </div>
 

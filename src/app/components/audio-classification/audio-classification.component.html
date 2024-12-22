@@ -14,8 +14,16 @@
   </button>
   <p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
   <div id="output-div" *ngIf="output()?.length">
-    <p>{{ output() }}</p>
-    <p>Score: {{ score() | number: '1.0-2' }}</p>
+    <table>
+      <tr>
+        <th>Label</th>
+        <th>Score</th>
+      </tr>
+      <tr *ngFor="let item of output()">
+        <td>{{ item.label }}</td>
+        <td>{{ (item.score * 100) | number: '1.2-2' }}</td>
+      </tr>
+    </table>
   </div>
 </div>
 
