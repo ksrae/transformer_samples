@@ -1,0 +1,13 @@
+<div class="container">
+
+  <img [src]="imageUrl()" />
+  <button id="generate-button" [disabled]="loading() ? true : null" (click)="generate()">
+    <span [ngClass]="{'loader': loading()}"></span> Classification
+  </button>
+  <p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
+  <div id="output-div" *ngIf="output()?.length">
+    <p>{{ output() }}</p>
+    <p>Score: {{ score() | number: '1.0-2' }}</p>
+  </div>
+</div>
+
