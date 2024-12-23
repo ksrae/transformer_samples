@@ -28,16 +28,16 @@ interface ProcessedDetectionResult extends DetectionResult {
 
 
 @Component({
-  selector: 'app-object-detection',
+  selector: 'app-zero-shot-object-detection',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule
   ],
-  templateUrl: './object-detection.component.html',
-  styleUrls: ['./object-detection.component.scss'],
+  templateUrl: './zero-shot-object-detection.component.html',
+  styleUrls: ['./zero-shot-object-detection.component.scss'],
 })
-export class ObjectDetectionComponent extends CommonDirective implements AfterViewInit {
+export class ZeroShotObjectDetectionComponent extends CommonDirective implements AfterViewInit {
   @ViewChild('imageElement') imageElement!: ElementRef;
   processedOutput = signal<ProcessedDetectionResult[]>([]);
   private scaleFactor = 1;
@@ -45,10 +45,14 @@ export class ObjectDetectionComponent extends CommonDirective implements AfterVi
   loading = signal(false);
   output = signal([] as any[]);
   score = signal(0);
-  imageUrl = signal('https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/cats.jpg');
+  imageUrl = signal('https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/astronaut.png');
+  label = signal(['human face', 'rocket', 'helmet', 'american flag']);
+  // imageUrl = signal('https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/beach.png');
+  // label = signal(['hat', 'book', 'sunglasses', 'camera']);
+
 
   ngAfterViewInit() {
-    this.worker = new Worker(new URL('../../workers/object-detection.worker', import.meta.url), {
+    this.worker = new Worker(new URL('../../workers/zero-shot-object-detection.worker', import.meta.url), {
       type: 'module'
     });
 
@@ -77,8 +81,8 @@ export class ObjectDetectionComponent extends CommonDirective implements AfterVi
   successResult(output: any) {
     console.log('output:', output);
 
-    this.output.set(output);
     this.processOutput(output);
+    this.output.set(output);
   }
 
   async generate() {
@@ -93,6 +97,7 @@ export class ObjectDetectionComponent extends CommonDirective implements AfterVi
 
     const message = {
       value: this.imageUrl(),
+      label: this.label(),
     };
 
     // Convert object to ArrayBuffer for transfer

@@ -18,6 +18,9 @@ export const routes: Routes = [
     {path: 'image-segmentation', loadComponent: () => import('./components/image-segmentation/image-segmentation.component').then((x) => x.ImageSegmentationComponent)},
     {path: 'zero-shot-image-classification', loadComponent: () => import('./components/zero-shot-image-classification/zero-shot-image-classification.component').then((x) => x.ZeroShotImageClassificationComponent)},
     {path: 'object-detection', loadComponent: () => import('./components/object-detection/object-detection.component').then((x) => x.ObjectDetectionComponent)},
+    {path: 'zero-shot-object-detection', loadComponent: () => import('./components/zero-shot-object-detection/zero-shot-object-detection.component').then((x) => x.ZeroShotObjectDetectionComponent)},
+    {path: 'document-question-answering', loadComponent: () => import('./components/document-question-answering/document-question-answering.component').then((x) => x.DocumentQuestionAnsweringComponent)},
+    {path: 'text-to-audio', loadComponent: () => import('./components/text-to-audio/text-to-audio.component').then((x) => x.TextToAudioComponent)},
 
   ]},
   { path: '**', redirectTo: 'summary' }

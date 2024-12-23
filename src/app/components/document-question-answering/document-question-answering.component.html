@@ -1,0 +1,15 @@
+<div class="container">
+  <h1>Document Question Answering</h1>
+
+  <div class="image-wrapper">
+    <img [src]="imageUrl()" alt="Classified Image" />
+  </div>
+  <textarea id="long-text-input" [formControl]="questionForm" placeholder="Enter your text here..."></textarea>
+  <button [disabled]="loading() ? true : null" (click)="answer()">
+    <span [ngClass]="{'loader': loading() && imageUrl()}"></span> Answer
+  </button>
+  <p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
+  <div class="result" *ngIf="output()?.length">
+    <p>{{ output() }}</p>
+  </div>
+</div>

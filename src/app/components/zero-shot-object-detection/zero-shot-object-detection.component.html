@@ -1,0 +1,41 @@
+<h3>Zero Shot Object Detection</h3>
+<div class="container">
+  <div class="image-wrapper">
+    <img
+      [src]="imageUrl()"
+      alt="Classified Image"
+      #imageElement
+      (load)="onImageLoad()"
+    />
+
+    <div
+      class="bounding-box"
+      *ngFor="let item of processedOutput()"
+      [ngStyle]="item.displayBox"
+    >
+      <span class="label">
+        {{ item.label }} ({{ (item.score * 100) | number:'1.0-0' }}%)
+      </span>
+    </div>
+  </div>
+
+  <button id="generate-button" [disabled]="loading() ? true : null" (click)="generate()">
+    <span [ngClass]="{'loader': loading()}"></span> Response
+  </button>
+  <p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
+  <div id="output-div" *ngIf="output()?.length">
+    <table>
+      <tr>
+        <th>Label</th>
+        <th>Score</th>
+        <th>Box</th>
+      </tr>
+      <tr *ngFor="let item of output()">
+        <td>{{ item.label }}</td>
+        <td>{{ (item.score * 100) | number: '1.2-2' }}</td>
+        <td>{{ item.box | json }}</td>
+      </tr>
+    </table>
+  </div>
+
+</div>

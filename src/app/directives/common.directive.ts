@@ -104,4 +104,44 @@ export class CommonDirective implements OnInit {
     const string = decoder.decode(new Uint8Array(buffer));
     return JSON.parse(string);
   }
+
+  // float32 to wav
+  float32ToWav(audio: Float32Array, sampleRate: number): ArrayBuffer {
+    const buffer = new ArrayBuffer(44 + audio.length * 2);
+    const view = new DataView(buffer);
+
+    const writeString = (offset: number, str: string) => {
+      for (let i = 0; i < str.length; i++) {
+        view.setUint8(offset + i, str.charCodeAt(i));
+      }
+    };
+
+    // RIFF Chunk Descriptor
+    writeString(0, 'RIFF');
+    view.setUint32(4, 36 + audio.length * 2, true); // file size - 8
+    writeString(8, 'WAVE');
+
+    // FMT Subchunk
+    writeString(12, 'fmt ');
+    view.setUint32(16, 16, true); // Subchunk1Size
+    view.setUint16(20, 1, true); // AudioFormat (PCM)
+    view.setUint16(22, 1, true); // NumChannels
+    view.setUint32(24, sampleRate, true); // SampleRate
+    view.setUint32(28, sampleRate * 2, true); // ByteRate (SampleRate * NumChannels * BitsPerSample / 8)
+    view.setUint16(32, 2, true); // BlockAlign (NumChannels * BitsPerSample / 8)
+    view.setUint16(34, 16, true); // BitsPerSample
+
+    // Data Subchunk
+    writeString(36, 'data');
+    view.setUint32(40, audio.length * 2, true); // Subchunk2Size (NumSamples * NumChannels * BitsPerSample / 8)
+
+    // PCM data
+    let offset = 44;
+    for (let i = 0; i < audio.length; i++, offset += 2) {
+      const s = Math.max(-1, Math.min(1, audio[i]));
+      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+    }
+
+    return buffer;
+  }
 }
