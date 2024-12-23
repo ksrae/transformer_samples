@@ -1,0 +1,15 @@
+<h1>Depth Estimation</h1>
+<div class="image-wrapper">
+  <img [src]="imageUrl()" alt="Classified Image" />
+</div>
+
+<button id="generate-button" [disabled]="loading() ? true : null" (click)="generate()">
+  <span [ngClass]="{'loader': loading()}"></span> Run
+</button>
+<p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
+<div id="output-div" *ngIf="resultViewer()">
+  <div id="image-output"></div>
+  <div #rendererContainer id="depth-output"></div>
+</div>
+
+

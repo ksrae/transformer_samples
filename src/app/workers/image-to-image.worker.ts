@@ -17,7 +17,10 @@ ctx.onmessage = async (event) => {
   const { value } = JSON.parse(string);
 
   try {
-    result = await pipeline('image-to-image', 'Xenova/swin2SR-classical-sr-x2-64');
+    result = await pipeline('image-to-image', 'Xenova/swin2SR-classical-sr-x2-64', {
+      dtype: 'q8',
+      device: 'wasm'
+    });
     output = await result(value) as any;
 
     // RawImage 객체를 직렬화 가능한 형태로 변환

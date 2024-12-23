@@ -17,7 +17,10 @@ ctx.onmessage = async (event) => {
   const { text } = JSON.parse(string);
 
   try {
-    result = await pipeline('fill-mask', 'Xenova/bert-base-cased');
+    result = await pipeline('fill-mask', 'Xenova/bert-base-cased', {
+      dtype: 'q8',
+      device: 'wasm'
+    });
     output = await result(text);
 
     // Convert response to ArrayBuffer for transfer

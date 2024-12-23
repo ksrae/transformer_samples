@@ -17,7 +17,10 @@ ctx.onmessage = async (event) => {
   const { value, label } = JSON.parse(string);
 
   try {
-    result = await pipeline('zero-shot-image-classification', 'Xenova/clip-vit-base-patch32');
+    result = await pipeline('zero-shot-image-classification', 'Xenova/clip-vit-base-patch32', {
+      dtype: 'q8',
+      device: 'wasm'
+    });
     // await pipeline('zero-shot-classification', 'Xenova/nli-deberta-v3-xsmall');
 
     output = await result(value, label);

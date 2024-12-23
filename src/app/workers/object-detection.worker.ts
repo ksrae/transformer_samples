@@ -17,7 +17,10 @@ ctx.onmessage = async (event) => {
   const { value } = JSON.parse(string);
 
   try {
-    result = await pipeline('object-detection', 'Xenova/detr-resnet-50');
+    result = await pipeline('object-detection', 'Xenova/detr-resnet-50', {
+      dtype: 'q8',
+      device: 'wasm'
+    });
     // await pipeline('zero-shot-classification', 'Xenova/nli-deberta-v3-xsmall');
 
     output = await result(value, { threshold: 0.9});

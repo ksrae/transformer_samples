@@ -1,31 +1,15 @@
-<a routerLink="/summary">Summary</a>
-<a routerLink="/translator">Translator</a>
-<a routerLink="/classification">Classification</a>
-<a routerLink="/audio-classification">Audio Classification</a>
-<a routerLink="/zero-shot-audio-classification">ZeroShot Audio Classification</a>
-<a routerLink="/speech-recognition">Speech Recognition</a>
-<a routerLink="/qa">QA</a>
-<a routerLink="/fillmask">FillMask</a>
-<a routerLink="/text2text-generation">Text2TextGeneration</a>
-<a routerLink="/text-generation">TextGeneration</a>
-<a routerLink="/image-to-text">Image to Text</a>
-<a routerLink="/image-classification">Image Classification</a>
-<a routerLink="/image-segmentation">Image Segmentation</a>
-<a routerLink="/zero-shot-image-classification">ZeroShot Image Classification</a>
-<a routerLink="/object-detection">Object Detection</a>
-<a routerLink="/zero-shot-object-detection">ZeroShot Object Detection</a>
-<a routerLink="/document-question-answering">Document Question Answering</a>
-<a routerLink="/text-to-audio">Text to Audio</a>
-<a routerLink="/image-to-image">Image to Image</a>
+<a routerLink="/text-ai" [routerLinkActive]="'active'">Text</a>
+<a routerLink="/image-ai" [routerLinkActive]="'active'">Image</a>
+<a routerLink="/audio-ai" [routerLinkActive]="'active'">Audio</a>
 
-<router-outlet></router-outlet>
+
+<div class="child-routes">
+  <router-outlet></router-outlet>
+</div>
 
 <pre>
-적용하지 않은 내용
-- FeatureExtractionPipeline
-- ImageFeatureExtractionPipeline
-
-- DepthEstimationPipeline
-
+구현하지 않은 목록
+  - TokenClassificationPipeline
 </pre>
+
 <a href="https://huggingface.co/docs/transformers.js/api/pipelines#module_pipelines.SummarizationPipeline">Refereneces</a>

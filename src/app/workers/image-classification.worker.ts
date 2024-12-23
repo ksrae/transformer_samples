@@ -18,7 +18,10 @@ ctx.onmessage = async (event) => {
   const { value } = JSON.parse(string);
 
   try {
-    result = await pipeline('image-classification', 'Xenova/vit-base-patch16-224');
+    result = await pipeline('image-classification', 'Xenova/vit-base-patch16-224', {
+      dtype: 'q8',
+      device: 'wasm'
+    });
     output = await result(value, { top_k: 3 });
     // Convert response to ArrayBuffer for transfer
     response = {

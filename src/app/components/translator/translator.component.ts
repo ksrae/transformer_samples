@@ -15,7 +15,7 @@ import { CommonDirective } from '../../directives/common.directive';
   styleUrl: './translator.component.scss'
 })
 export class TranslatorComponent extends CommonDirective implements AfterViewInit {
-  sourceTextForm = new FormControl('');
+  sourceTextForm = new FormControl('By default, when running in the browser, the model will be run on your CPU (via WASM).');
   sourceLangForm = new FormControl('en');
   targetLangForm = new FormControl('ko');
 
@@ -23,7 +23,7 @@ export class TranslatorComponent extends CommonDirective implements AfterViewIni
   targetLANG = signal('ko');
   sourceText = signal('');
   translatedText = signal('');
-  loading = signal(true);
+  loading = signal(false);
   error = signal('');
 
   ngAfterViewInit() {
@@ -106,8 +106,8 @@ export class TranslatorComponent extends CommonDirective implements AfterViewIni
 
     const message = {
       text: this.sourceText(),
-      sourceLang: this.sourceLANG,
-      targetLang: this.targetLANG,
+      sourceLang: this.sourceLANG(),
+      targetLang: this.targetLANG(),
     };
 
     // Convert object to ArrayBuffer for transfer

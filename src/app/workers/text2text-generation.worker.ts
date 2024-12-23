@@ -17,7 +17,10 @@ ctx.onmessage = async (event) => {
   const { text } = JSON.parse(string);
 
   try {
-    result = await pipeline('text2text-generation', 'Xenova/LaMini-Flan-T5-783M');
+    result = await pipeline('text2text-generation', 'Xenova/LaMini-Flan-T5-783M', {
+      dtype: 'q8',
+      device: 'wasm'
+    });
     output = await result(text, {max_new_tokens: 100} as any);
 
     // Convert response to ArrayBuffer for transfer

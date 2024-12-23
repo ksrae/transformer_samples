@@ -1,10 +1,10 @@
-<div class="container">
+<h1>Zero Shot Audio Classification</h1>
   <!-- <textarea id="long-text-input" [formControl]="originTextForm" placeholder="나중에 url 받을 예정..."></textarea> -->
   <audio id="audio" controls>
     <source [src]="audioUrl()" type="audio/wav">
   </audio>
   <button id="generate-button" [disabled]="loading() ? true : null" (click)="generate()">
-    <span [ngClass]="{'loader': loading()}"></span> Classification
+    <span [ngClass]="{'loader': loading()}"></span> Run
   </button>
   <p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
   <div id="output-div" *ngIf="output()?.length">
@@ -19,5 +19,3 @@
       </tr>
     </table>
   </div>
-</div>
-

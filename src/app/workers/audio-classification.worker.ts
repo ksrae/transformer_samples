@@ -11,11 +11,17 @@ ctx.onmessage = async (event) => {
 
     if (modelType === 'gender') {
       // Load the pipeline
-      result = await pipeline('audio-classification', 'Xenova/wav2vec2-large-xlsr-53-gender-recognition-librispeech');
+      result = await pipeline('audio-classification', 'Xenova/wav2vec2-large-xlsr-53-gender-recognition-librispeech', {
+        dtype: 'q8',
+        device: 'wasm'
+      });
       // Process the audio data
       output = await result(audioData);
     } else if (modelType === 'star') {
-      result = await pipeline('audio-classification', 'Xenova/ast-finetuned-audioset-10-10-0.4593');
+      result = await pipeline('audio-classification', 'Xenova/ast-finetuned-audioset-10-10-0.4593', {
+        dtype: 'q8',
+        device: 'wasm'
+      });
       output = await result(audioData, { top_k: 5 });
     }
 

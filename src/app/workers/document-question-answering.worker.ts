@@ -17,7 +17,10 @@ ctx.onmessage = async (event) => {
   const { imageUrl, question } = JSON.parse(string);
 
   try {
-    result = await pipeline('document-question-answering', 'Xenova/donut-base-finetuned-docvqa');
+    result = await pipeline('document-question-answering', 'Xenova/donut-base-finetuned-docvqa', {
+      dtype: 'q8',
+      device: 'wasm'
+    });
 
     output = await result(imageUrl, question);
 

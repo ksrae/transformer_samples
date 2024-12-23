@@ -1,0 +1,117 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  padding: 20px;
+}
+* {
+  box-sizing: border-box;
+}
+a {
+  margin-right: 10px;
+  padding:10px;
+}
+a.active {
+  /* Add styles for active links */
+  font-weight: bold;
+  color: #007bff;
+  background-color: #ccc;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+.loader {
+  color: #fff; /* 버튼 내 텍스트 색상과 동일하게 변경 */
+  width: 4px;
+  aspect-ratio: 1;
+  display: inline-block; /* 텍스트와 함께 정렬되도록 변경 */
+  vertical-align: middle; /* 텍스트와 수직 정렬 */
+  margin-right: 8px; /* 텍스트와의 간격 */
+  border-radius: 50%;
+  box-shadow: 19px 0 0 7px, 38px 0 0 3px, 57px 0 0 0;
+  transform: translateX(-38px) scale(0.5); /* 크기를 좀 더 작게 조정 */
+  animation: l21 .5s infinite alternate linear;
+}
+
+@keyframes l21 {
+  50%  {box-shadow: 19px 0 0 3px, 38px 0 0 7px, 57px 0 0 3px}
+  100% {box-shadow: 19px 0 0 0  , 38px 0 0 3px, 57px 0 0 7px}
+}
+
+textarea {
+  width: 100%;
+  height: 200px;
+  border-radius: 5px;
+  padding: 15px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  resize: none;
+}
+
+button {
+  display: block;
+  width: 100%;
+  margin: 20px 0;
+  padding: 10px;
+  background-color: #3498db;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+button:disabled {
+  background-color: #b3c2c8;
+  cursor: not-allowed;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#spinner {
+  display: inline-block;
+  margin-right: 10px;
+  animation: spin 1s linear infinite;
+}
+
+#output-div {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.select-container {
+  margin-bottom: 20px;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+.elapsed-time {
+  font-size: 14px;
+  color: #555;
+  margin-top: 10px;
+  text-align: right;
+}

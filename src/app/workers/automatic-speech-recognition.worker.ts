@@ -10,7 +10,10 @@ ctx.onmessage = async (event) => {
     let output;
 
     // Transcribe English.
-    result = await pipeline('automatic-speech-recognition', 'Xenova/whisper-tiny.en');
+    result = await pipeline('automatic-speech-recognition', 'Xenova/whisper-tiny.en', {
+      dtype: 'q8',
+      device: 'wasm'
+    });
     // const url = 'https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/jfk.wav';
     output = await result(audioData);
     // Transcribe English w/ timestamps.

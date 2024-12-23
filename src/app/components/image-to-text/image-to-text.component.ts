@@ -18,7 +18,7 @@ export class ImageToTextComponent extends CommonDirective implements AfterViewIn
   // sourceTextForm = new FormControl('');
   sourceForm = new FormControl('caption');
 
-  output = signal('');
+  output = signal([] as any);
   loading = signal(false);
   error = signal('');
   imageUrl = signal('https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/cats.jpg');
@@ -26,6 +26,8 @@ export class ImageToTextComponent extends CommonDirective implements AfterViewIn
   ngAfterViewInit() {
     this.sourceForm.valueChanges.pipe(
       tap(value => {
+        this.output.set([]);
+
         if(value === 'caption') {
           this.imageUrl.set('https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/cats.jpg');
         } else if(value === 'ocr') {
@@ -62,7 +64,7 @@ export class ImageToTextComponent extends CommonDirective implements AfterViewIn
   }
 
   successResult(output: any) {
-    this.output.set((output[0] as any).generated_text);
+    this.output.set(output);
   }
 
   async translate() {
@@ -72,6 +74,7 @@ export class ImageToTextComponent extends CommonDirective implements AfterViewIn
     }
 
     this.loading.set(true);
+    this.output.set([]);
 
     this.startTimer(); // 시작 시간 기록
 

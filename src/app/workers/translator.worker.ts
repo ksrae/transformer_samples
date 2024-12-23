@@ -17,7 +17,13 @@ ctx.onmessage = async (event) => {
   const { text, sourceLang, targetLang } = JSON.parse(string);
 
   try {
-    result = await pipeline('translation', 'Xenova/m2m100_418M');
+    // Should be one of: webgpu, wasm.
+    // for device webgpu dtype must be {dtype: 'fp32', device: 'webgpu'}
+    result = await pipeline('translation', 'Xenova/m2m100_418M', {
+      dtype: 'q8',
+      device: 'wasm'
+    });
+
     // await pipeline('translation', 'Xenova/nllb-200-distilled-600M');
     // await pipeline('translation', 'Xenova/mbart-large-50-many-to-many-mmt');
     output = await result(text, {

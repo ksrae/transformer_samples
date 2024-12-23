@@ -19,7 +19,10 @@ ctx.onmessage = async (event) => {
   try {
     // Xenova/t5-small
     // Xenova/bart-large-cnn
-    result = await pipeline('summarization', 'Xenova/distilbart-cnn-6-6');
+    result = await pipeline('summarization', 'Xenova/distilbart-cnn-6-6', {
+      dtype: 'q8',
+      device: 'wasm'
+    });
     output = await result(text, {
       max_new_tokens: 100,
     } as any);

@@ -20,16 +20,25 @@ ctx.onmessage = async (event) => {
   try {
     switch (modelType) {
       case 'positive':
-        result = await pipeline('sentiment-analysis', 'Xenova/distilbert-base-uncased-finetuned-sst-2-english');
+        result = await pipeline('sentiment-analysis', 'Xenova/distilbert-base-uncased-finetuned-sst-2-english', {
+          dtype: 'q8',
+          device: 'wasm'
+        });
         output = await result(text);
         break;
       case 'star':
-        result = await pipeline('sentiment-analysis', 'Xenova/bert-base-multilingual-uncased-sentiment');
+        result = await pipeline('sentiment-analysis', 'Xenova/bert-base-multilingual-uncased-sentiment', {
+          dtype: 'q8',
+          device: 'wasm',
+        });
         output = await result(text, { top_k: 5 });
         break;
       case 'feel':
-        result = await pipeline('text-classification', 'Xenova/toxic-bert');
-        output = await result(text, { top_k: undefined });
+        result = await pipeline('text-classification', 'Xenova/toxic-bert', {
+          dtype: 'q8',
+          device: 'wasm',
+        });
+        output = await result(text, { top_k: 5 });
         break;
     }
 

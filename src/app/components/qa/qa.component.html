@@ -1,12 +1,13 @@
-<h3>Context로 학습한 내용에 대한 질문을 답할 수 있다.</h3>
-<div class="container">
-  <textarea id="long-text-input" [formControl]="questionForm" placeholder="Enter your question here..."></textarea>
-  <textarea id="long-text-input" [formControl]="contextForm" placeholder="Enter your context here..."></textarea>
-  <button id="generate-button" [disabled]="loading() ? true : null" (click)="generate()">
-    <span [ngClass]="{'loader': loading() && questionForm.value?.length && contextForm.value?.length ? true : false}"></span> Response
-  </button>
-  <p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
-  <div id="output-div" *ngIf="output()?.length">
-    <p>{{ output() }}</p>
-  </div>
+<h1>Context로 학습한 내용에 대한 질문을 답할 수 있다.</h1>
+
+<textarea id="long-text-input" [formControl]="questionForm" placeholder="Enter your question here..."></textarea>
+<textarea id="long-text-input" [formControl]="contextForm" placeholder="Enter your context here..."></textarea>
+<button id="generate-button" [disabled]="loading() ? true : null" (click)="generate()">
+  <span [ngClass]="{'loader': loading() && questionForm.value?.length && contextForm.value?.length ? true : false}"></span> Run
+</button>
+<p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
+<div id="output-div" *ngIf="output()?.length">
+  <p>{{ output() }}</p>
+  <p>Score: {{ score() | number: '1.0-2' }}</p>
 </div>
+

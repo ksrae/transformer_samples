@@ -1,12 +1,17 @@
-<h3>Text generation: This has an error</h3>
-<div class="container">
-  <textarea id="long-text-input" [formControl]="textForm" placeholder="Enter your text here..."></textarea>
-  <button id="generate-button" [disabled]="loading() ? true : null" (click)="generate()">
-    <span [ngClass]="{'loader': loading() && textForm.value?.length ? true : false}"></span> Response
-  </button>
-  <p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
-  <div id="output-div" *ngIf="output()?.length">
-    <p>{{ output() }}</p>
-  </div>
+<h1>Text generation</h1>
+<p>This has an error</p>
+<textarea id="long-text-input" [formControl]="textForm" placeholder="Enter your text here..."></textarea>
+<button id="generate-button" [disabled]="loading() ? true : null" (click)="generate()">
+  <span [ngClass]="{'loader': loading() && textForm.value?.length ? true : false}"></span> Run
+</button>
+<p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
+<div id="output-div" *ngIf="output()?.length">
+  <table>
+    <tr>
+      <th>Generated Text</th>
+    </tr>
+    <tr *ngFor="let item of output()">
+      <td><p [innerHTML]="item.generated_text"></p></td>
+    </tr>
+  </table>
 </div>
-

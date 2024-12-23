@@ -15,9 +15,9 @@ import { CommonDirective } from '../../directives/common.directive';
   styleUrl: './text2text-generation.component.scss'
 })
 export class Text2textgenerationComponent extends CommonDirective implements AfterViewInit {
-  loading = signal(true);
-  output = signal('');
-  textForm = new FormControl('');
+  loading = signal(false);
+  output = signal([] as any);
+  textForm = new FormControl('how can I become more healthy?');
 
 
   ngAfterViewInit() {
@@ -55,7 +55,7 @@ export class Text2textgenerationComponent extends CommonDirective implements Aft
   }
 
   successResult(output: any) {
-    this.output.set(output[0].generated_text);
+    this.output.set(output);
   }
 
   async generate() {
@@ -65,7 +65,7 @@ export class Text2textgenerationComponent extends CommonDirective implements Aft
     }
 
     this.loading.set(true);
-    this.output.set('');
+    this.output.set([]);
     this.startTimer(); // 시작 시간 기록
 
     const text = `${this.textForm.value}`;

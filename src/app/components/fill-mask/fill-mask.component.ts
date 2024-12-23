@@ -16,9 +16,9 @@ import { CommonDirective } from '../../directives/common.directive';
   styleUrl: './fill-mask.component.scss'
 })
 export class FillmaskComponent extends CommonDirective implements AfterViewInit {
-  loading = signal(true);
-  output = signal('');
-  maskForm = new FormControl('');
+  loading = signal(false);
+  output = signal([] as any);
+  maskForm = new FormControl('The goal of life is [MASK].');
 
 
   ngAfterViewInit() {
@@ -55,8 +55,7 @@ export class FillmaskComponent extends CommonDirective implements AfterViewInit 
   }
 
   successResult(output: any) {
-    const highestItem = output.length && output.length === 1 ? output[0] : output.sort((a: any, b: any) => b.score - a.score)[0];
-    this.output.set(highestItem.sequence);
+    this.output.set(output);
   }
 
   async generate() {
@@ -66,10 +65,10 @@ export class FillmaskComponent extends CommonDirective implements AfterViewInit 
     }
 
     this.loading.set(true);
-    this.output.set('');
+    this.output.set([]);
     this.startTimer(); // 시작 시간 기록
 
-    const text = `${this.maskForm.value} [MASK].`;
+    const text = `${this.maskForm.value}`;
 
     const message = {
       text,

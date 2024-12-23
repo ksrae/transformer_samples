@@ -13,7 +13,11 @@ ctx.onmessage = async (event) => {
   let response;
   try {
     // Load text-to-speech pipeline
-    const ttsPipeline = await pipeline('text-to-speech', 'Xenova/speecht5_tts', { quantized: false } as any);
+    // do not use dtype here, it may create low quality audio
+    const ttsPipeline = await pipeline('text-to-speech', 'Xenova/speecht5_tts', {
+      device: 'wasm',
+      quantized: false
+    } as any);
 
     // Fetch and convert speaker embeddings to Float32Array
     const speakerEmbeddingsBuffer = await fetch(

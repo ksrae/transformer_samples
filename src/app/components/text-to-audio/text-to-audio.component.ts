@@ -18,7 +18,7 @@ import { CommonDirective } from '../../directives/common.directive';
 export class TextToAudioComponent extends CommonDirective implements AfterViewInit {
   loading = signal(false);
   output = signal('');
-  maskForm = new FormControl('Hello, my dog is cute');
+  maskForm = new FormControl('Hello, my dog is cute.');
 
   ngAfterViewInit() {
     this.maskForm.valueChanges.pipe(

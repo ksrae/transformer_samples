@@ -17,7 +17,10 @@ ctx.onmessage = async (event) => {
   const { value, label } = JSON.parse(string);
 
   try {
-    result = await pipeline('zero-shot-object-detection', 'Xenova/owlvit-base-patch32');
+    result = await pipeline('zero-shot-object-detection', 'Xenova/owlvit-base-patch32', {
+      dtype: 'q8',
+      device: 'wasm'
+    });
 
     output = await result(value, label, {top_k: 4, threshold: 0.05});
 

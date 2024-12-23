@@ -17,7 +17,10 @@ ctx.onmessage = async (event) => {
   const { text, labels } = JSON.parse(string);
 
   try {
-    result = await pipeline('zero-shot-classification', 'Xenova/mobilebert-uncased-mnli');
+    result = await pipeline('zero-shot-classification', 'Xenova/mobilebert-uncased-mnli', {
+      dtype: 'q8',
+      device: 'wasm'
+    });
     // await pipeline('zero-shot-classification', 'Xenova/nli-deberta-v3-xsmall');
 
     output = await result(text, labels);

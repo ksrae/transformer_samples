@@ -1,0 +1,16 @@
+<h1>Image Feature Extraction</h1>
+<div class="image-wrapper">
+  <img [src]="imageUrl()" alt="Classified Image" />
+</div>
+
+<button id="generate-button" [disabled]="loading() ? true : null" (click)="generate()">
+  <span [ngClass]="{'loader': loading()}"></span> Run
+</button>
+<p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
+<div id="output-div" *ngIf="resultViewer()">
+
+  <app-tensor-visualizer
+  [tensorData]="output().data"
+  [dimensions]="output().dims">
+</app-tensor-visualizer>
+</div>

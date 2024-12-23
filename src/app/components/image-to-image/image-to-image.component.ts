@@ -47,7 +47,7 @@ export class ImageToImageComponent extends CommonDirective implements AfterViewI
     // 받은 데이터를 다시 Uint8Array로 변환
     const uint8Array = new Uint8Array(output.data);
     const { width, height, channels } = output;
-    console.log('output', output, { uint8Array });
+    console.log('output', output, output.length);
 
     const canvas = document.createElement('canvas');
     canvas.width = width;
@@ -75,9 +75,11 @@ export class ImageToImageComponent extends CommonDirective implements AfterViewI
         }
     }, 'image/png');
 
-    const container = document.querySelector('#output-div');
-    // 캔버스를 DOM에 추가 (옵션)
-    container?.appendChild(canvas);
+    setTimeout(() => {
+      const container = document.querySelector('#output-div');
+      // 캔버스를 DOM에 추가 (옵션)
+      container?.appendChild(canvas);
+    }, 0);
 }
 
 

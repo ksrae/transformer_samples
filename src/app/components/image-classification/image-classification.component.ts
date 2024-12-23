@@ -13,8 +13,7 @@ import { CommonDirective } from '../../directives/common.directive';
 })
 export class ImageClassificationComponent extends CommonDirective implements AfterViewInit {
   loading = signal(false);
-  output = signal('');
-  score = signal(0);
+  output = signal([] as any);
   imageUrl = signal('https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/tiger.jpg');
 
   ngAfterViewInit() {
@@ -45,9 +44,7 @@ export class ImageClassificationComponent extends CommonDirective implements Aft
   }
 
   successResult(output: any) {
-    const highestItem = output.length === 1 ? output[0] : output.sort((a: any, b: any) => b.score - a.score)[0];
-    this.output.set(highestItem.label);
-    this.score.set(highestItem.score * 100);
+    this.output.set(output);
   }
 
   async generate() {
@@ -57,8 +54,7 @@ export class ImageClassificationComponent extends CommonDirective implements Aft
     }
 
     this.loading.set(true);
-    this.output.set('');
-    this.score.set(0);
+    this.output.set([]);
     this.startTimer();
 
     const value = this.imageUrl();

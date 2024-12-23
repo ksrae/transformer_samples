@@ -12,10 +12,9 @@ import { CommonDirective } from '../../directives/common.directive';
   styleUrl: './classification.component.scss'
 })
 export class ClassificationComponent extends CommonDirective implements AfterViewInit {
-  loading = signal(true);
-  output = signal('');
-  score = signal(0);
-  originTextForm = new FormControl('');
+  loading = signal(false);
+  output = signal([] as any[]);
+  originTextForm = new FormControl('I like you');
   sourceTypeForm = new FormControl('positive');
 
   ngAfterViewInit() {
@@ -50,9 +49,9 @@ export class ClassificationComponent extends CommonDirective implements AfterVie
   }
 
   successResult(output: any) {
-    const highestItem = output.length === 1 ? output[0] : output.sort((a: any, b: any) => b.score - a.score)[0];
-    this.output.set(highestItem.label);
-    this.score.set(highestItem.score * 100);
+    console.log('output:', output);
+
+    this.output.set(output);
   }
 
   async generate() {
@@ -62,8 +61,7 @@ export class ClassificationComponent extends CommonDirective implements AfterVie
     }
 
     this.loading.set(true);
-    this.output.set('');
-    this.score.set(0);
+    this.output.set([]);
     this.startTimer();
 
     const text = this.originTextForm.value ?? '';

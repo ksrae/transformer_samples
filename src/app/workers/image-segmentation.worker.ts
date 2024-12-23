@@ -18,7 +18,10 @@ ctx.onmessage = async (event) => {
   const { value } = JSON.parse(string);
 
   try {
-    result = await pipeline('image-segmentation', 'Xenova/detr-resnet-50-panoptic');
+    result = await pipeline('image-segmentation', 'Xenova/detr-resnet-50-panoptic', {
+      dtype: 'q8',
+      device: 'wasm'
+    });
     output = await result(value);
     // Convert response to ArrayBuffer for transfer
     response = {

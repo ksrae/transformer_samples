@@ -1,0 +1,27 @@
+@import '../../global.scss';
+
+.info-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.info-card h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.info-card ul {
+  list-style: disc inside;
+  padding: 0;
+  margin: 0;
+}
+
+.info-card li {
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: #555;
+}

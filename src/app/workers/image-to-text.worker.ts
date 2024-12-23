@@ -18,10 +18,16 @@ ctx.onmessage = async (event) => {
 
   try {
     if(type === 'caption') {
-      result = await pipeline('image-to-text', 'Xenova/vit-gpt2-image-captioning');
+      result = await pipeline('image-to-text', 'Xenova/vit-gpt2-image-captioning', {
+        dtype: 'q8',
+        device: 'wasm'
+      });
       output = await result(imageUrl);
     } else if(type === 'ocr') {
-      result = await pipeline('image-to-text', 'Xenova/trocr-small-handwritten');
+      result = await pipeline('image-to-text', 'Xenova/trocr-small-handwritten', {
+        dtype: 'q8',
+        device: 'wasm'
+      });
       output = await result(imageUrl);
     }
 

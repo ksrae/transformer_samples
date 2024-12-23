@@ -1,0 +1,40 @@
+<h1>Feature Extraction</h1>
+<textarea id="long-text-input" [formControl]="originTextForm" placeholder="Enter your text here..."></textarea>
+<button id="generate-button" [disabled]="loading() ? true : null" (click)="generate()">
+  <span [ngClass]="{'loader': loading() && originTextForm.value?.length ? true : false}"></span> Run
+</button>
+<p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
+<div id="output-div" *ngIf="result()">
+  <div class="info-card">
+    <h3>정보</h3>
+    <ul>
+      <li><strong>임베딩 벡터</strong>: 텍스트, 이미지, 오디오 입력 데이터를 신경망이 수치로 변환한 표현</li>
+      <li><strong>벡터 크기</strong>: 텍스트를 dims: [1, 8, 768] 형태로 변환 (8개의 토큰, 각 768차원)</li>
+    </ul>
+  </div>
+
+  <div class="info-card">
+    <h3>활용</h3>
+    <ul>
+      <li><strong>비교와 검색</strong>: 코사인 유사도를 통해 의미적 유사성 측정</li>
+      <li><strong>전이 학습</strong>: 분류, 군집화, 회귀 등에 활용 가능</li>
+      <li><strong>차원 축소</strong>: PCA 또는 t-SNE로 2D/3D 공간에 매핑</li>
+    </ul>
+  </div>
+
+  <div class="info-card">
+    <h3>예시</h3>
+    <ul>
+      <li><strong>텍스트 유사도</strong>: A와 B의 코사인 유사도로 문장 유사도 계산</li>
+      <li><strong>차원 축소 후 시각화</strong>: 768차원 데이터를 t-SNE로 줄여 군집 관찰</li>
+    </ul>
+  </div>
+
+  <app-tensor-visualizer
+    [tensorData]="output().data"
+    [dimensions]="output().dims">
+  </app-tensor-visualizer>
+</div>
+
+
+

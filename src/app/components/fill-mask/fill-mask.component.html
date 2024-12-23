@@ -1,11 +1,24 @@
-<h3>내용 채우기</h3>
-<div class="container">
-  <textarea id="long-text-input" [formControl]="maskForm" placeholder="Enter your text here..."></textarea>
-  <button id="generate-button" [disabled]="loading() ? true : null" (click)="generate()">
-    <span [ngClass]="{'loader': loading() && maskForm.value?.length ? true : false}"></span> Response
-  </button>
-  <p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
-  <div id="output-div" *ngIf="output()?.length">
-    <p>{{ output() }}</p>
-  </div>
+<h1>내용 채우기</h1>
+<p>채우기를 원하는 곳에 [MASK]를 둡니다.</p>
+<textarea id="long-text-input" [formControl]="maskForm" placeholder="Enter your text here..."></textarea>
+<button id="generate-button" [disabled]="loading() ? true : null" (click)="generate()">
+  <span [ngClass]="{'loader': loading() && maskForm.value?.length ? true : false}"></span> Run
+</button>
+<p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
+<div id="output-div" *ngIf="output()?.length">
+  <table>
+    <tr>
+      <th>Squence</th>
+      <th>Token String</th>
+      <th>Token Number</th>
+      <th>Score</th>
+    </tr>
+    <tr *ngFor="let item of output()">
+      <td>{{ item.sequence }}</td>
+      <td>{{ item.token_str }}</td>
+      <td>{{ item.token }}</td>
+      <td>{{ (item.score * 100) | number: '1.2-2' }}</td>
+    </tr>
+  </table>
 </div>
+

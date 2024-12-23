@@ -1,8 +1,7 @@
-<div class="container">
-  <textarea id="long-text-input" [formControl]="originTextForm" placeholder="Enter your copy here..."></textarea>
-  <button id="generate-button" [disabled]="loading() ? true : null" (click)="generateSummary()">
-    <span [ngClass]="{'loader': loading() && originTextForm.value?.length ? true : false}"></span> Generate Summary
-  </button>
-  <p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
-  <div id="output-div" *ngIf="output()?.length">{{ output() }}</div>
-</div>
+<h1>Summary</h1>
+<textarea id="long-text-input" [formControl]="originTextForm" placeholder="Enter your copy here..."></textarea>
+<button id="generate-button" [disabled]="loading() ? true : null" (click)="generateSummary()">
+  <span [ngClass]="{'loader': loading() && originTextForm.value?.length ? true : false}"></span> Run
+</button>
+<p class="elapsed-time">{{ elapsedTime() | number: '1.1-1' }} Seconds</p>
+<div id="output-div" *ngIf="output()?.length">{{ output() }}</div>

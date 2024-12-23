@@ -17,16 +17,32 @@ ctx.onmessage = async (event) => {
   const { text } = JSON.parse(string);
 
   try {
-    result = await await pipeline('text-generation', 'eachadea/vicuna-7b-1.1');
-    // await pipeline('text-generation', 'Xenova/codegen-350M-mono');
-    output = await result(text, {
-      temperature: 2,
-      max_new_tokens: 10,
-      repetition_penalty: 1.5,
-      no_repeat_ngram_size: 2,
-      num_beams: 2,
-      num_return_sequences: 2,
+    // not working
+    result = await await pipeline('text-generation', 'eachadea/vicuna-7b-1.1', {
+      dtype: 'q8',
+      device: 'wasm'
     });
+    output = await result(text);
+
+    // not working
+    // result = await await pipeline('text-generation', 'eachadea/vicuna-7b-1.1', {
+    //   dtype: 'q8',
+    //   device: 'wasm'
+    // });
+    // output = await result(text, {
+    //   temperature: 2,
+    //   max_new_tokens: 10,
+    //   repetition_penalty: 1.5,
+    //   no_repeat_ngram_size: 2,
+    //   num_beams: 2,
+    //   num_return_sequences: 2,
+    // });
+
+    // result = await pipeline('text-generation', 'Xenova/codegen-350M-mono');
+
+    // output = await result(text, {
+    //   max_new_tokens: 50,
+    // });
 
 
     // Convert response to ArrayBuffer for transfer

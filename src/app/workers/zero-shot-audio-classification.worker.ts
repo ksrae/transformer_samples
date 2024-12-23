@@ -10,7 +10,10 @@ ctx.onmessage = async (event) => {
     let result;
     let output;
 
-    result = await pipeline('zero-shot-audio-classification', 'Xenova/clap-htsat-unfused');
+    result = await pipeline('zero-shot-audio-classification', 'Xenova/clap-htsat-unfused', {
+      dtype: 'q8',
+      device: 'wasm'
+    });
     output = await result(audioData, label);
 
     const response = {

@@ -14,11 +14,16 @@ ctx.onmessage = async (event) => {
   let responseString;
   let responseBuffer;
 
-  const { question, context, modelType } = JSON.parse(string);
+  const { question, context } = JSON.parse(string);
 
   try {
-    result = await pipeline('question-answering', 'Xenova/distilbert-base-uncased-distilled-squad');
+    result = await pipeline('question-answering', 'Xenova/distilbert-base-uncased-distilled-squad', {
+      dtype: 'q8',
+      device: 'wasm'
+    });
     output = await result(question, context);
+
+    console.log({output});
 
     // Convert response to ArrayBuffer for transfer
     response = {

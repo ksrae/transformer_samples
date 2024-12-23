@@ -15,10 +15,9 @@ import { CommonDirective } from '../../directives/common.directive';
   styleUrl: './summary.component.scss'
 })
 export class SummaryComponent extends CommonDirective implements AfterViewInit {
-  loading = signal(true);
+  loading = signal(false);
   output = signal('');
-  originTextForm = new FormControl('');
-
+  originTextForm = new FormControl('It’s super simple to translate from existing code! Just like the python library, we support the pipeline API. Pipelines group together a pretrained model with preprocessing of inputs and postprocessing of outputs, making it the easiest way to run models with the library.');
 
   ngAfterViewInit() {
     // this.setSummaryPipeline();

@@ -17,6 +17,7 @@ import { CommonDirective } from '../../directives/common.directive';
 export class QAComponent extends CommonDirective implements AfterViewInit {
   loading = signal(false);
   output = signal('');
+  score = signal(0);
 
   questionForm = new FormControl('Who is Sungrae?');
   contextForm = new FormControl(`
@@ -68,8 +69,8 @@ export class QAComponent extends CommonDirective implements AfterViewInit {
 
 
   successResult(output: any) {
-    this.output = output.answer;
-    // this.score = output.score * 100;
+    this.output.set(output.answer);
+    this.score.set(output.score * 100);
   }
 
   async generate() {
@@ -81,6 +82,7 @@ export class QAComponent extends CommonDirective implements AfterViewInit {
 
     this.loading.set(true);
     this.output.set('');
+    this.score.set(0);
     this.startTimer(); // 시작 시간 기록
 
 
