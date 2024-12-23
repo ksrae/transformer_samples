@@ -17,7 +17,7 @@ ctx.onmessage = async (event) => {
       });
       // Process the audio data
       output = await result(audioData);
-    } else if (modelType === 'star') {
+    } else if (modelType === 'finetune') {
       result = await pipeline('audio-classification', 'Xenova/ast-finetuned-audioset-10-10-0.4593', {
         dtype: 'q8',
         device: 'wasm'

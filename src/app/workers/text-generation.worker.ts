@@ -18,25 +18,11 @@ ctx.onmessage = async (event) => {
 
   try {
     // not working
-    result = await await pipeline('text-generation', 'eachadea/vicuna-7b-1.1', {
+    result = await pipeline('text-generation', 'onnx-community/Qwen2.5-0.5B-Instruct', {
       dtype: 'q8',
-      device: 'wasm'
-    });
+      device: 'wasm',
+    } as any);
     output = await result(text);
-
-    // not working
-    // result = await await pipeline('text-generation', 'eachadea/vicuna-7b-1.1', {
-    //   dtype: 'q8',
-    //   device: 'wasm'
-    // });
-    // output = await result(text, {
-    //   temperature: 2,
-    //   max_new_tokens: 10,
-    //   repetition_penalty: 1.5,
-    //   no_repeat_ngram_size: 2,
-    //   num_beams: 2,
-    //   num_return_sequences: 2,
-    // });
 
     // result = await pipeline('text-generation', 'Xenova/codegen-350M-mono');
 

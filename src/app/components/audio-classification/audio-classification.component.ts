@@ -23,7 +23,7 @@ export class AudioClassificationComponent extends CommonDirective implements Aft
   private audioContext: AudioContext | null = null;
 
   ngAfterViewInit() {
-    this.audioUrl.set('https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/jfk.wav');
+    this.audioUrl.set('https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/dog_barking.wav');
 
     this.worker = new Worker(new URL('../../workers/audio-classification.worker', import.meta.url), {
       type: 'module'

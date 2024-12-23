@@ -17,7 +17,7 @@ import { CommonDirective } from '../../directives/common.directive';
 export class TextgenerationComponent extends CommonDirective implements AfterViewInit {
   loading = signal(false);
   output = signal([] as any);
-  textForm = new FormControl('Once upon a time, there was');
+  textForm = new FormControl('I got shocked because');
 
 
   ngAfterViewInit() {
@@ -68,7 +68,7 @@ export class TextgenerationComponent extends CommonDirective implements AfterVie
     this.output.set([]);
     this.startTimer(); // 시작 시간 기록
 
-    const text = `${this.textForm.value}.`;
+    const text = `${this.textForm.value}`;
 
     const message = {
       text,
