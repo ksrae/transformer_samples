@@ -21,6 +21,7 @@ export const routes: Routes = [
     {path: 'zero-shot-object-detection', loadComponent: () => import('./components/zero-shot-object-detection/zero-shot-object-detection.component').then((x) => x.ZeroShotObjectDetectionComponent)},
     {path: 'document-question-answering', loadComponent: () => import('./components/document-question-answering/document-question-answering.component').then((x) => x.DocumentQuestionAnsweringComponent)},
     {path: 'text-to-audio', loadComponent: () => import('./components/text-to-audio/text-to-audio.component').then((x) => x.TextToAudioComponent)},
+    {path: 'image-to-image', loadComponent: () => import('./components/image-to-image/image-to-image.component').then((x) => x.ImageToImageComponent)},
 
   ]},
   { path: '**', redirectTo: 'summary' }
