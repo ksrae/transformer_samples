@@ -8,5 +8,5 @@ export const routes: Routes = [
     {path: 'image-ai', loadChildren: () => import('./routes/image-ai/image-ai.routes').then((x) => x.routes)},
 
   ]},
-  { path: '**', redirectTo: 'summary' }
+  { path: '**', redirectTo: '/text-ai/summary' }
 ];
